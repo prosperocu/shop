@@ -60,10 +60,12 @@ BODY JSON:
 		  {"id": "234234", "count": "1"}
 	  ],
 	  "total_discount": 0,          // total percent discount                
-	  "product_discount": [         // for product discount
-	      {"id": "234234", "count": "1"}
+	  "product_discount": [         // for product percent discount
+	      {"id": "234234", "discount": 10}
 	  ]
     }
+    
+    // NOTE: The rules of promotion can be blending and the promos it self too.
 
 POST Remove Promotion: 
 

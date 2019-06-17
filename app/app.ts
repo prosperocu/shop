@@ -70,64 +70,64 @@ let shopping_car = {};
 ////////////////////
 // JSON SAMPLES
 
-// products = {
-//   "120P90": { "name": "Google Home", "price": 49.99},
-//   "43N23P": { "name": "MacBook Pro", "price": 5399.99},
-//   "A304SD": { "name": "Alexa Speaker", "price": 109.5},
-//   "234234": { "name": "Raspberry Pi B", "price": 30}
-// };
-//
-// promotions = {
-//     "1": {
-//       "promo": "Each sale of a MacBook comes with a free Raspberry Pi B",
-//       "product": [
-//         {"id": "43N23P", "count": "1"}
-//         ],
-//       "amount": 0,
-//       "plus_products": [
-//           {"id": "234234", "count": "1"}
-//         ],
-//       "total_discount": 0,
-//       "product_discount": []
-//       },
-//     "2": {
-//       "promo": "Buy 3 Google Homes for the price of 2",
-//       "product": [
-//           {"id": "120P90", "count": "3"}
-//         ],
-//       "amount": 0,
-//       "plus_products": [],
-//       "total_discount": 0.333333333333333333333333,
-//       "product_discount": []
-//       },
-//     "3": {
-//       "promo": "Buying more than 2 Alexa Speakers will have a 10% discount on all Alexa Speakers",
-//       "product": [
-//           {"id": "A304SD", "count": "2+"}
-//       ],
-//       "amount": 0,
-//       "plus_products": [],
-//       "total_discount": 0,
-//       "product_discount": [
-//           {"id": "A304SD", "discount": 0.10}
-//         ]
-//       },
-// };
-//
-// shopping_car = {
-//   "1": {
-//       "id_product": "43N23P",
-//       "count": 1
-//   },
-//   "2": {
-//       "id_product": "120P90",
-//       "count": 3
-//   },
-//   "3": {
-//       "id_product": "A304SD",
-//       "count": 3
-//   }
-// };
+products = {
+  "120P90": { "name": "Google Home", "price": 49.99},
+  "43N23P": { "name": "MacBook Pro", "price": 5399.99},
+  "A304SD": { "name": "Alexa Speaker", "price": 109.5},
+  "234234": { "name": "Raspberry Pi B", "price": 30}
+};
+
+promotions = {
+    "1": {
+      "promo": "Each sale of a MacBook comes with a free Raspberry Pi B",
+      "product": [
+        {"id": "43N23P", "count": "1"}
+        ],
+      "amount": 0,
+      "plus_products": [
+          {"id": "234234", "count": "1"}
+        ],
+      "total_discount": 0,
+      "product_discount": []
+      },
+    "2": {
+      "promo": "Buy 3 Google Homes for the price of 2",
+      "product": [
+          {"id": "120P90", "count": "3"}
+        ],
+      "amount": 0,
+      "plus_products": [],
+      "total_discount": 0.333333333333333333333333,
+      "product_discount": []
+      },
+    "3": {
+      "promo": "Buying more than 2 Alexa Speakers will have a 10% discount on all Alexa Speakers",
+      "product": [
+          {"id": "A304SD", "count": "2+"}
+      ],
+      "amount": 0,
+      "plus_products": [],
+      "total_discount": 0,
+      "product_discount": [
+          {"id": "A304SD", "discount": 0.10}
+        ]
+      },
+};
+
+shopping_car = {
+  "1": {
+      "id_product": "43N23P",
+      "count": 1
+  },
+  "2": {
+      "id_product": "120P90",
+      "count": 3
+  },
+  "3": {
+      "id_product": "A304SD",
+      "count": 3
+  }
+};
 
 // ENDED JSON SAMPLES
 ////////////////////
@@ -441,7 +441,8 @@ app.post('/api/scanner', function (req, res) {
                                     // adding global discount
                                     total_money_shop *= promotions[i].total_discount;
                                 }
-                                if (promotions[i].product_discount) {
+                                if (promotions[i].product_discount[0]) {
+                                    console.log("PROMO: ", promotions[i].product_discount);
                                     // adding product discount
                                     let unitary_price = products[shopping_car[id].id_product].price;
                                     let total_items = shopping_car[id].count;

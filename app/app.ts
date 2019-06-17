@@ -81,9 +81,9 @@ let shopping_car = {};
 //     "1": {
 //       "promo": "Each sale of a MacBook comes with a free Raspberry Pi B",
 //       "product": [
-//         {"id": "43N23P", "count": "1"}
+//         {"id": "43N23P", "rule": "==1"}
 //         ],
-//       "amount": 0,
+//
 //       "plus_products": [
 //           {"id": "234234", "count": "1"}
 //         ],
@@ -93,9 +93,9 @@ let shopping_car = {};
 //     "2": {
 //       "promo": "Buy 3 Google Homes for the price of 2",
 //       "product": [
-//           {"id": "120P90", "count": "3"}
+//           {"id": "120P90", "rule": "==3"}
 //         ],
-//       "amount": 0,
+//
 //       "plus_products": [],
 //       "total_discount": 0.333333333333333333333333,
 //       "product_discount": []
@@ -103,9 +103,9 @@ let shopping_car = {};
 //     "3": {
 //       "promo": "Buying more than 2 Alexa Speakers will have a 10% discount on all Alexa Speakers",
 //       "product": [
-//           {"id": "A304SD", "count": "2+"}
+//           {"id": "A304SD", "rule": ">2"}
 //       ],
-//       "amount": 0,
+//
 //       "plus_products": [],
 //       "total_discount": 0,
 //       "product_discount": [
@@ -222,19 +222,17 @@ app.post('/api/add_promo', function (req, res) {
     //      "promo": "Buy 3 for the price of 2",
     //      "product": [                            # when promo is for buying a product or combined
 
-    //          {"id": "123", "count": "3+"},       # three or more
-    //          {"id": "234", "count": "3"}         # exactly 3
+    //          {"id": "123", "rule": ">3"},        # three or more
+    //          {"id": "234", "rule": "==3"}        # exactly 3
 
     //      ],
-
-    //      "amount": 1000,                         # when promo if about total price spend
 
     //      "plus_products": [                      # promo of free products included
     //          {"id": "123", "count": 3}
     //      ],
-    //      "total_discount": 10,                   # promo of TOTAL SPEND percent discount
+    //      "total_discount": 0.40,                 # promo of TOTAL SPEND percent discount (40% sample)
     //      "product_discount": [                   # promo of PRODUCT percent discount
-    //          {"id": "123", "discount": 10}
+    //          {"id": "123", "discount": 0.10}     # (10% on al 123 products discount sample)
     //      ]
     // }
 
@@ -243,7 +241,7 @@ app.post('/api/add_promo', function (req, res) {
 
     let response = {err: false, code: 200, msg: "OK", data: ""};
 
-    if(!req.body.id || !req.body.promo || (!req.body.product && !req.body.amount) ||
+    if(!req.body.id || !req.body.promo || !req.body.product ||
         (!req.body.plus_products && !req.body.total_discount && !req.body.product_discount)) {
         response.err = true;
         response.code = 101;
@@ -256,7 +254,7 @@ app.post('/api/add_promo', function (req, res) {
             delete promotions[req.body.id];
         }
         promotions[req.body.id] = {
-            "promo": req.body.promo, "product": req.body.product, "amount": req.body.amount,
+            "promo": req.body.promo, "product": req.body.product,
             "plus_products": req.body.plus_products, "total_discount":  req.body.total_discount,
             "product_discount": req.body.product_discount
         };
@@ -414,23 +412,13 @@ app.post('/api/scanner', function (req, res) {
               result_scan += products[shopping_car[id].id_product].name + ', ';
             // applying promos
             for (let i in promotions) {                                                 // for each promotion
-                let apply_promo = false;
-                // finding if this shop have promo of total spend money
-                if (promotions[i].amount > 0 && total_shop >= promotions[i].amount) {
-                    // applying the promo
-                    apply_promo = true;
-                    if (promotions[i].plus_products) {
-                        for (let j in promotions[i].plus_products) {
-                            result_scan += products[j].name + ', ';                     // adding free products
-                        }
-                    }
-                }
                 // finding if this shop have promo of shopping products
                 if (promotions[i].product) {
                     for (let j in promotions[i].product) {
-                        for (let k in shopping_car[id]) {
-                            if(shopping_car[id][k] == promotions[i].product[j].id){
-                                // one of the shopping product have promotion
+                        if(shopping_car[id].id_product == promotions[i].product[j].id){
+                            // one of the shopping product have promotion
+                            // validating numbers of buying products to apply
+                            if (eval(shopping_car[id].count.toString() + promotions[i].product[j].rule)) {
                                 if (promotions[i].plus_products) {
                                     for (let l in promotions[i].plus_products) {
                                         // adding free products
@@ -442,11 +430,10 @@ app.post('/api/scanner', function (req, res) {
                                     total_money_shop *= promotions[i].total_discount;
                                 }
                                 if (promotions[i].product_discount[0]) {
-                                    console.log("PROMO: ", promotions[i].product_discount);
                                     // adding product discount
                                     let unitary_price = products[shopping_car[id].id_product].price;
                                     let total_items = shopping_car[id].count;
-                                    total_money_shop -= total_items*unitary_price*promotions[i].product_discount[0].discount;
+                                    total_money_shop -= total_items * unitary_price * promotions[i].product_discount[0].discount;
                                 }
                             }
                         }

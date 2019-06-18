@@ -94,7 +94,7 @@ BODY JSON:
           "plus_products": [],
           "total_discount": 0,                   
           "product_discount": [                   
-              {"id": "A304SD", "discount": 10} 
+              {"id": "A304SD", "discount": 0.10} 
           ]
     }
     

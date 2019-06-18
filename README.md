@@ -260,3 +260,7 @@ JSON OUT:
 
     // response for promo ID=1
     {"err":false,"code":200,"msg":"OK","data":"Scanned Items: MacBook Pro, Raspberry Pi B Total: $5399.99"}
+
+4. Logging:
+
+File "app.log" inside the "logs" folder.

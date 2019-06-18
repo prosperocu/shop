@@ -82,7 +82,7 @@ npm install
 
 POST Add Product: 
 
-    http://IP:port/api/add_product/
+    http://localhost:3000/api/add_product/
 
 BODY JSON IN:
 
@@ -90,7 +90,7 @@ BODY JSON IN:
 
 POST Remove Product: 
 
-     http://IP:port/api/del_product/
+     http://localhost:3000/api/del_product/
 
 BODY JSON IN:
 
@@ -99,7 +99,7 @@ BODY JSON IN:
     
 GET Get Products: 
 
-     http://IP:port/api/get_products/
+     http://localhost:3000/api/get_products/
 
 JSON OUT:
 
@@ -120,7 +120,7 @@ JSON OUT:
 
 POST Add Promotion: 
     
-    http://IP:port/api/add_promo/
+    http://localhost:3000/api/add_promo/
 
 BODY JSON IN:
 
@@ -181,7 +181,7 @@ BODY JSON IN:
 
 POST Remove Promotion: 
 
-    http://IP:port/api/del_promo/
+    http://localhost:3000/api/del_promo/
 
 BODY JSON IN:
 
@@ -189,7 +189,7 @@ BODY JSON IN:
     
 GET Get Promos: 
 
-     http://IP:port/api/get_promos/
+     http://localhost:3000/api/get_promos/
 
 JSON OUT:
 
@@ -211,7 +211,7 @@ JSON OUT:
 
 POST Add Shop: 
     
-    http://IP:port/api/add_shop/
+    http://localhost:3000/api/add_shop/
     
 BODY JSON IN:
  
@@ -238,7 +238,7 @@ BODY JSON IN:
     
 POST Del Shop: 
     
-    http://IP:port/api/del_shop/
+    http://localhost:3000/api/del_shop/
     
 BODY JSON IN:
  
@@ -248,7 +248,7 @@ BODY JSON IN:
     
 POST CheckOut (for get Total Spend): 
         
-    http://IP:port/api/checkout/
+    http://localhost:3000/api/checkout/
         
 BODY JSON IN:
      

@@ -1,20 +1,22 @@
 "use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-// lib/app.ts
 var express = require("express");
 // Create a new express application instance
 var app = express();
 // Using body parser for helping parsing
 var bodyParser = require('body-parser');
+
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
+
 var products = {};
+
 // sample of json products
 /*
   {
     "FKUCE": {"price": 10, "name": "Alexa"},
   }
 */
+
 var promotions = {};
 // sample of json promotions
 /*
@@ -34,6 +36,7 @@ var promotions = {};
       }
   }
 */
+
 var shopping_car = {};
 // sample of json shopping_car
 /*
@@ -57,79 +60,94 @@ var shopping_car = {};
  };
 
  */
+
 ////////////////////
 // JSON SAMPLES
-// products = {
-//   "120P90": { "name": "Google Home", "price": 49.99},
-//   "43N23P": { "name": "MacBook Pro", "price": 5399.99},
-//   "A304SD": { "name": "Alexa Speaker", "price": 109.5},
-//   "234234": { "name": "Raspberry Pi B", "price": 30}
-// };
-//
-// promotions = {
-//     "1": {
-//       "promo": "Each sale of a MacBook comes with a free Raspberry Pi B",
-//       "product": [
-//         {"id": "43N23P", "rule": "==1"}
-//         ],
-//
-//       "plus_products": [
-//           {"id": "234234", "count": "1"}
-//         ],
-//       "total_discount": 0,
-//       "product_discount": []
-//       },
-//     "2": {
-//       "promo": "Buy 3 Google Homes for the price of 2",
-//       "product": [
-//           {"id": "120P90", "rule": "==3"}
-//         ],
-//
-//       "plus_products": [],
-//       "total_discount": 0.333333333333333333333333,
-//       "product_discount": []
-//       },
-//     "3": {
-//       "promo": "Buying more than 2 Alexa Speakers will have a 10% discount on all Alexa Speakers",
-//       "product": [
-//           {"id": "A304SD", "rule": ">2"}
-//       ],
-//
-//       "plus_products": [],
-//       "total_discount": 0,
-//       "product_discount": [
-//           {"id": "A304SD", "discount": 0.10}
-//         ]
-//       },
-// };
-//
-// shopping_car = {
-//   "1": {
-//       "id_product": "43N23P",
-//       "count": 1
-//   },
-//   "2": {
-//       "id_product": "120P90",
-//       "count": 3
-//   },
-//   "3": {
-//       "id_product": "A304SD",
-//       "count": 3
-//   }
-// };
+
+// obtaining env
+var env = process.env.NODE_ENV;
+
+console.log(env);
+
+if (env === 'development') {
+
+    products = {
+        "120P90": {"name": "Google Home", "price": 49.99},
+        "43N23P": {"name": "MacBook Pro", "price": 5399.99},
+        "A304SD": {"name": "Alexa Speaker", "price": 109.5},
+        "234234": {"name": "Raspberry Pi B", "price": 30}
+    };
+
+    promotions = {
+        "1": {
+            "promo": "Each sale of a MacBook comes with a free Raspberry Pi B",
+            "product": [
+                {"id": "43N23P", "rule": "==1"}
+            ],
+
+            "plus_products": [
+                {"id": "234234", "count": "1"}
+            ],
+            "total_discount": 0,
+            "product_discount": []
+        },
+        "2": {
+            "promo": "Buy 3 Google Homes for the price of 2",
+            "product": [
+                {"id": "120P90", "rule": "==3"}
+            ],
+
+            "plus_products": [],
+            "total_discount": 0.333333333333333333333333,
+            "product_discount": []
+        },
+        "3": {
+            "promo": "Buying more than 2 Alexa Speakers will have a 10% discount on all Alexa Speakers",
+            "product": [
+                {"id": "A304SD", "rule": ">2"}
+            ],
+
+            "plus_products": [],
+            "total_discount": 0,
+            "product_discount": [
+                {"id": "A304SD", "discount": 0.10}
+            ]
+        }
+    };
+
+    shopping_car = {
+        "1": {
+            "id_product": "43N23P",
+            "count": 1
+        },
+        "2": {
+            "id_product": "120P90",
+            "count": 3
+        },
+        "3": {
+            "id_product": "A304SD",
+            "count": 3
+        }
+    };
+
+}
 // ENDED JSON SAMPLES
 ////////////////////
+
 var error_msg = {
     200: "OK",
     101: "missing data element",
     102: "duplicated entry element",
-    103: "missing entry element",
+    103: "missing entry element"
 };
+
 app.get('/', function (req, res) {
     res.send('Shop API OK.');
 });
+
 ////////////////////
 // MANAGING PRODUCTS
+
 // adding or updating
 app.post('/api/add_product', function (req, res) {
     // sample body: {"id": "123", "name": "Selfie", "price": 0.5}
@@ -142,7 +160,7 @@ app.post('/api/add_product', function (req, res) {
         response.msg = error_msg[101];
     }
     // adding or updating item if exists
-    if (response.code == 200) {
+    if (response.code === 200) {
         if (products[req.body.id]) {
             delete products[req.body.id];
         }
@@ -152,6 +170,7 @@ app.post('/api/add_product', function (req, res) {
     console.log(products);
     res.send(response);
 });
+
 // deleting
 app.post('/api/del_product', function (req, res) {
     // sample body: {"id": "123"}
@@ -164,7 +183,7 @@ app.post('/api/del_product', function (req, res) {
         response.msg = error_msg[101];
     }
     // finding and deleting item
-    if (response.code == 200) {
+    if (response.code === 200) {
         if (!products[req.body.id]) {
             response.err = true;
             response.code = 103;
@@ -178,10 +197,17 @@ app.post('/api/del_product', function (req, res) {
     console.log(products);
     res.send(response);
 });
+
+app.get('/api/get_products/', function (req, res) {
+    res.send(products);
+});
+
 // ENDED MANAGING PRODUCTS
 ////////////////////
+
 ////////////////////
 // MANAGING PROMOTIONS
+
 // adding or updating
 app.post('/api/add_promo', function (req, res) {
     // sample body:
@@ -210,7 +236,7 @@ app.post('/api/add_promo', function (req, res) {
         response.msg = error_msg[101];
     }
     // adding or updating item if exists
-    if (response.code == 200) {
+    if (response.code === 200) {
         if (promotions[req.body.id]) {
             delete promotions[req.body.id];
         }
@@ -224,6 +250,7 @@ app.post('/api/add_promo', function (req, res) {
     console.log(promotions);
     res.send(response);
 });
+
 // deleting
 app.post('/api/del_promo', function (req, res) {
     // sample body: {"id": "123"}
@@ -236,7 +263,7 @@ app.post('/api/del_promo', function (req, res) {
         response.msg = error_msg[101];
     }
     // finding item
-    if (response.code == 200) {
+    if (response.code === 200) {
         if (!promotions[req.body.id]) {
             response.err = true;
             response.code = 103;
@@ -250,10 +277,17 @@ app.post('/api/del_promo', function (req, res) {
     console.log(promotions);
     res.send(response);
 });
+
+app.get('/api/get_promos', function (req, res) {
+    res.send(promotions);
+});
+
 // ENDED MANAGING PROMOTIONS
 ////////////////////
+
 ////////////////////
 // MANAGING SHOPPING CARS
+
 // adding or updating product to a shopping car
 app.post('/api/add_shop', function (req, res) {
     // sample body:
@@ -271,7 +305,7 @@ app.post('/api/add_shop', function (req, res) {
         response.msg = error_msg[101];
     }
     // adding or updating item if exists
-    if (response.code == 200) {
+    if (response.code === 200) {
         if (shopping_car[req.body.id]) {
             delete shopping_car[req.body.id];
         }
@@ -282,6 +316,7 @@ app.post('/api/add_shop', function (req, res) {
     console.log(shopping_car);
     res.send(response);
 });
+
 // removing product of a shopping car
 app.post('/api/del_shop', function (req, res) {
     // sample body:     {"id": "1", "id_product": "123"}
@@ -294,7 +329,7 @@ app.post('/api/del_shop', function (req, res) {
         response.msg = error_msg[101];
     }
     // finding item
-    if (response.code == 200) {
+    if (response.code === 200) {
         if (!shopping_car[req.body.id] || !shopping_car[req.body.id][req.body.id_product]) {
             response.err = true;
             response.code = 103;
@@ -308,8 +343,9 @@ app.post('/api/del_shop', function (req, res) {
     console.log(shopping_car);
     res.send(response);
 });
+
 // obtain amount of the shopping applying actual promos
-app.post('/api/scanner', function (req, res) {
+app.post('/api/checkout', function (req, res) {
     // sample body:     {"id": "1"}
     console.log("review_shop");
     console.log(req.body);
@@ -321,7 +357,7 @@ app.post('/api/scanner', function (req, res) {
     }
     var id = req.body.id;
     // finding item
-    if (response.code == 200) {
+    if (response.code === 200) {
         if (!shopping_car[id]) {
             response.err = true;
             response.code = 103;
@@ -335,11 +371,11 @@ app.post('/api/scanner', function (req, res) {
             for (var i = 0; i < shopping_car[id].count; i++)
                 result_scan += products[shopping_car[id].id_product].name + ', ';
             // applying promos
-            for (var i in promotions) { // for each promotion
+            for (i in promotions) { // for each promotion
                 // finding if this shop have promo of shopping products
                 if (promotions[i].product) {
                     for (var j in promotions[i].product) {
-                        if (shopping_car[id].id_product == promotions[i].product[j].id) {
+                        if (shopping_car[id].id_product === promotions[i].product[j].id) {
                             // one of the shopping product have promotion
                             // validating numbers of buying products to apply
                             if (eval(shopping_car[id].count.toString() + promotions[i].product[j].rule)) {
@@ -372,8 +408,14 @@ app.post('/api/scanner', function (req, res) {
     console.log(response);
     res.send(response);
 });
+
+app.get('/api/get_shops', function (req, res) {
+    res.send(shopping_car);
+});
+
 // ENDED MANAGING SHOPPING CAR
 ////////////////////
+
 app.listen(3000, function () {
     console.log('Example app listening on port 3000!');
 });
